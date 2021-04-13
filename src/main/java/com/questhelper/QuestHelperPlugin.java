@@ -47,6 +47,7 @@ import com.questhelper.questhelpers.QuestHelper;
 import com.questhelper.steps.QuestStep;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -56,6 +57,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.SwingUtilities;
 import lombok.Getter;
 import lombok.Setter;
@@ -120,6 +124,8 @@ public class QuestHelperPlugin extends Plugin
 			WidgetInfo.FIXED_VIEWPORT_QUESTS_TAB.getId(),
 			QUESTTAB_GROUP_ID
 		};
+
+	Clip clip = null;
 
 	private static final String QUEST_PACKAGE = "com.questhelper.quests";
 
@@ -294,6 +300,32 @@ public class QuestHelperPlugin extends Plugin
 		bankTagService = null;
 		bankTagsMain = null;
 		quests = null;
+	}
+
+	void playSound(String file)
+	{
+		if (!config.playWelcome() || (clip != null && clip.isRunning()))
+		{
+			return;
+		}
+
+		try
+		{
+			clip = AudioSystem.getClip();
+			InputStream stream = QuestHelperPlugin.class.getResourceAsStream("/" + file);
+			if (stream == null)
+			{
+				return;
+			}
+			AudioInputStream inputStream = AudioSystem.getAudioInputStream(
+				stream);
+			clip.open(inputStream);
+			clip.start();
+		}
+		catch (Exception e)
+		{
+			System.err.println(e.getMessage());
+		}
 	}
 
 	@Subscribe
@@ -721,6 +753,7 @@ public class QuestHelperPlugin extends Plugin
 				panel.addQuest(questHelper, true);
 				clientThread.invokeLater(() -> panel.updateItemRequirements(client, questBank.getBankItems()));
 			});
+			playSound("welcome.wav");
 		}
 		else
 		{

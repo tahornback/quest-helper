@@ -253,4 +253,23 @@ public interface QuestHelperConfig extends Config
 	{
 		return false;
 	}
+
+	@ConfigSection(
+		position = 3,
+		name = "Audio",
+		description = "Choose which audio you wish to be played"
+	)
+	String audioSection = "audioSection";
+
+	@ConfigItem(
+		keyName = "playWelcome",
+		name = "Say 'Welcome to my helper'",
+		description = "When you start a quest, play an audio clip welcoming you to the helper",
+		position = 4,
+		section = audioSection
+	)
+	default boolean playWelcome()
+	{
+		return false;
+	}
 }
