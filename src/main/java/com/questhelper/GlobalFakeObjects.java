@@ -24,6 +24,7 @@
  */
 package com.questhelper;
 
+import com.questhelper.helpers.quests.deserttreasureii.FakeWhisperer;
 import com.questhelper.requirements.runelite.PlayerQuestStateRequirement;
 import com.questhelper.requirements.util.Operation;
 import com.questhelper.steps.WidgetDetails;
@@ -52,6 +53,8 @@ public class GlobalFakeObjects
 		replacedHopleez.addExamineAction(runeliteObjectManager);
 		replacedHopleez.setDisplayRequirement(new PlayerQuestStateRequirement(configManager, PlayerQuests.COOKS_HELPER, 4, Operation.GREATER_EQUAL));
 		replacedHopleez.addWidgetReplacement(new WidgetReplacement(new WidgetDetails(WidgetInfo.DIALOG_NPC_TEXT), "Hatius Cosaintus", "Hopleez"));
+
+		FakeWhisperer.createWhisperer(client, "global", runeliteObjectManager);
 	}
 
 	public static void disableNpcs(RuneliteObjectManager runeliteObjectManager)

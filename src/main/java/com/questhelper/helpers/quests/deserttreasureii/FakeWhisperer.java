@@ -56,15 +56,20 @@ public class FakeWhisperer
 
 	public static void createWhisperer(Client client, QuestHelper qh, RuneliteObjectManager runeliteObjectManager)
 	{
-		FakeNpc whisperer = runeliteObjectManager.createFakeNpc(qh.toString(),
+		createWhisperer(client, qh.toString(), runeliteObjectManager);
+	}
+
+	public static void createWhisperer(Client client, String groupID, RuneliteObjectManager runeliteObjectManager)
+	{
+		FakeNpc whisperer = runeliteObjectManager.createFakeNpc(groupID,
 			new int[] { 49222, 49218, 49221, 49224, 49219 },
 			new WorldPoint(2656, 6379, 0),
 			10230);
 
 		String TENTACLE_SUBGROUP = "tentacleAttack";
 		String WATER_SUBGROUP = "waterSplash";
-		runeliteObjectManager.addSubGroup(qh.toString(), TENTACLE_SUBGROUP);
-		runeliteObjectManager.addSubGroup(qh.toString(), WATER_SUBGROUP);
+		runeliteObjectManager.addSubGroup(groupID, TENTACLE_SUBGROUP);
+		runeliteObjectManager.addSubGroup(groupID, WATER_SUBGROUP);
 
 		AtomicInteger actionsPerformed = new AtomicInteger(0);
 
@@ -311,13 +316,11 @@ public class FakeWhisperer
 		whisperer.addTalkAction(runeliteObjectManager);
 		whisperer.setOrientationGoalAsPlayer(client);
 		whisperer.setAlwaysFacePlayer(true);
+
 		whisperer.setDisplayRequirement(new Conditions(
 			nor(new ObjectCondition(ObjectID.TENTACLE_47586, new WorldPoint(2656, 6384, 0)),
 					new ObjectCondition(ObjectID.TENTACLE, new WorldPoint(2656, 6384, 0))
-			),
-			// TODO: Determine if in boss fight?
-			new VarbitRequirement(15126, 40, Operation.GREATER_EQUAL),
-			new VarbitRequirement(15126, 42, Operation.LESS_EQUAL)
+			)
 		));
 	}
 
